@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "DeepProjectResearcher Configuration",
+  "description": "Configuration for automatic project research and reference management",
+  "type": "object",
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Enable or disable the plugin",
+      "default": true
+    },
+    "autoResearch": {
+      "type": "boolean", 
+      "description": "Automatically research when project opens",
+      "default": true
+    },
+    "researchDepth": {
+      "type": "string",
+      "enum": ["light", "medium", "heavy"],
+      "description": "Research depth: light (5-10 results), medium (10-20), heavy (20-50)",
+      "default": "light"
+    },
+    "maxReferences": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 100,
+      "description": "Maximum number of reference projects to store",
+      "default": 10
+    },
+    "platforms": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Platforms to search (github, gitlab, codeberg, any)",
+      "default": ["github", "gitlab", "codeberg", "any"]
+    },
+    "minStars": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Minimum stars for reference projects",
+      "default": 10
+    },
+    "searchEngines": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Search engines to use",
+      "default": ["web"]
+    },
+    "contextAwareSuggestions": {
+      "type": "boolean",
+      "description": "Enable context-aware suggestions during conversations",
+      "default": true
+    },
+    "codeAnalysis": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable code analysis features",
+          "default": true
+        },
+        "cacheSize": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Number of code analysis results to cache",
+          "default": 20
+        }
+      },
+      "default": {
+        "enabled": true,
+        "cacheSize": 20
+      }
+    }
+  }
+}
