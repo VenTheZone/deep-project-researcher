@@ -1,8 +1,8 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { z } from "zod";
-import { type PluginInput, type Result } from "./lib/types.js";
-import { searchReferences } from "./lib/reference-manager.js";
+import { type PluginInput, type Result } from "./types.js";
+import { searchReferences } from "./reference-manager.js";
 
 const DEFAULT_CONFIG_PATH = ".opencode/dpr.jsonc";
 const DEFAULT_CONFIG = {
@@ -127,12 +127,12 @@ const analyzeConversationForRelevance = (
   };
 };
 
-export const shouldSuggestReferences = (ctx: PluginInput): boolean => {
-  const configResult = loadConfig(ctx.directory);
+export const shouldSuggestReferences = async (ctx: PluginInput): Promise<boolean> => {
+  const configResult = await loadConfig(ctx.directory);
   if (!configResult.success) {
     return false;
   }
-  
+
   return configResult.data.contextAwareSuggestions && configResult.data.enabled;
 };
 

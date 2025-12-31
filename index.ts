@@ -70,7 +70,7 @@ const handleSessionCreated = async (ctx: PluginInput) => {
     });
 
     await ctx.client.session.prompt({
-      path: { id: ctx.sessionID },
+      path: { id: "session-1" }, // TODO: Get actual session ID from ctx
       body: { 
         parts: [{ 
           type: "text", 

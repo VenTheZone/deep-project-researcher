@@ -2,6 +2,13 @@ import { promises as fs } from "fs";
 import path from "path";
 import { type TechStackAnalysis, type ProjectMetadata, type Result } from "./types.js";
 
+export class ProjectAnalysisError extends Error {
+  constructor(message: string, public readonly cause?: Error) {
+    super(message);
+    this.name = "ProjectAnalysisError";
+  }
+}
+
 /**
  * Detect programming language from project files
  */
@@ -80,7 +87,7 @@ export const parseRequirementsTxt = async (projectPath: string): Promise<TechSta
       .split("\n")
       .map(line => line.trim())
       .filter(line => line && !line.startsWith("#"))
-      .map(line => line.split(/[=<>]/)[0].trim());
+      .map(line => line.split(/[=<>]/)[0]?.trim() ?? line.trim());
 
     const frameworks = dependencies.filter(dep =>
       ["django", "flask", "fastapi", "pytest"].some(fw => dep.includes(fw))
@@ -114,7 +121,7 @@ export const parseGoMod = async (projectPath: string): Promise<TechStackAnalysis
       const trimmed = line.trim();
       if (trimmed.startsWith("require ") && !trimmed.startsWith("require (")) {
         const parts = trimmed.split(/\s+/);
-        if (parts.length >= 2) {
+        if (parts.length >= 2 && parts[1]) {
           dependencies.push(parts[1]);
         }
       }
@@ -156,7 +163,7 @@ export const parseCargoToml = async (projectPath: string): Promise<TechStackAnal
       }
       if (inDeps && trimmed && !trimmed.startsWith("#")) {
         const depMatch = trimmed.match(/^(\w+)\s*=/);
-        if (depMatch) {
+        if (depMatch && depMatch[1]) {
           dependencies.push(depMatch[1]);
         }
       }
@@ -236,9 +243,9 @@ export const analyzeFeatures = async (projectPath: string): Promise<string[]> =>
       "src/config": "configuration",
     };
 
-    for (const [path, feature] of Object.entries(featureMap)) {
+    for (const [featurePath, feature] of Object.entries(featureMap)) {
       try {
-        await fs.access(path.join(projectPath, path));
+        await fs.access(path.join(projectPath, featurePath));
         if (!features.includes(feature)) {
           features.push(feature);
         }

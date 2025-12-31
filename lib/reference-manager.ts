@@ -2,7 +2,12 @@ import { promises as fs } from "fs";
 import path from "path";
 import { type Reference, type ReferencesData, type Result } from "./types.js";
 
-export { ReferenceManagerError };
+export class ReferenceManagerError extends Error {
+  constructor(message: string, public readonly cause?: Error) {
+    super(message);
+    this.name = "ReferenceManagerError";
+  }
+}
 
 const DEFAULT_REFERENCES_PATH = ".opencode/references.json";
 

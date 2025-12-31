@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { type Reference, type ResearchOptions, type Result, type ResearchError } from "./types.js";
+import { type Reference, type ResearchOptions, type Result } from "./types.js";
+import { ResearchError } from "./types.js";
 
 /**
  * Construct intelligent search query based on project characteristics
@@ -47,8 +48,8 @@ const parseSearchResults = (searchResults: string): Reference[] => {
     // Look for GitHub URLs
     const githubMatch = line.match(/https:\/\/github\.com\/([^\/\s]+)/);
     if (githubMatch) {
-      const url = githubMatch[0];
-      const repoPath = githubMatch[1];
+      const url = githubMatch[0] ?? "";
+      const repoPath = githubMatch[1] ?? "";
       const name = repoPath.split("/").pop() ?? repoPath;
       
       references.push({

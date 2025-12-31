@@ -1,4 +1,8 @@
+import { type PluginInput } from "@opencode-ai/plugin";
 import { z } from "zod";
+
+// Re-export PluginInput for internal use
+export type { PluginInput };
 
 // Project metadata types
 export interface ProjectMetadata {
